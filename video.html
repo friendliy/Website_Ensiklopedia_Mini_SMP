@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Pembelajaran - Ensiklopedia Mini SMP</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="video.js" defer></script>
+  <script src="auth.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>🎥 Video Pembelajaran SMP</h1>
+      <div class="header-nav">
+        <a href="dashboard.html" class="btn-nav">⬅ Dashboard</a>
+        <a href="index.html" class="btn-nav">📖 Mode Artikel</a>
+        <button onclick="logout()" class="btn-logout">Keluar</button>
+      </div>
+    </div>
+    <input type="text" id="searchBox" placeholder="🔍 Cari video berdasarkan judul, kategori, atau materi...">
+  </header>
+
+  <main>
+    <div class="page-intro">
+      <h2>📺 Koleksi Video Pembelajaran</h2>
+      <p>Tonton video edukatif berkualitas tinggi untuk memahami materi dengan lebih mudah dan menyenangkan!</p>
+    </div>
+
+    <!-- Filter Kategori -->
+    <div class="filter-section">
+      <h3>Filter berdasarkan kategori:</h3>
+      <div class="filter-buttons">
+        <button class="filter-btn active" onclick="filterVideos('all')">Semua</button>
+        <button class="filter-btn" onclick="filterVideos('IPA')">IPA</button>
+        <button class="filter-btn" onclick="filterVideos('IPS')">IPS</button>
+        <button class="filter-btn" onclick="filterVideos('Bahasa')">Bahasa</button>
+        <button class="filter-btn" onclick="filterVideos('Seni')">Seni</button>
+      </div>
+    </div>
+
+    <div id="videoList" class="video-grid"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Ensiklopedia SMP | Video pembelajaran untuk generasi digital</p>
+  </footer>
+
+  <script>
+    // Tunggu sampai semua script dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cek authentication
+      if (typeof checkAuth === 'function') {
+        checkAuth();
+      }
+      
+      // Tunggu sebentar untuk memastikan data.js sudah dimuat
+      setTimeout(function() {
+        initializeVideoPage();
+      }, 100);
+    });
+
+    function initializeVideoPage() {
+      console.log('Initializing video page...');
+      
+      // Periksa apakah artikelData tersedia
+      if (typeof artikelData === 'undefined') {
+        console.error('artikelData not found!');
+        return;
+      }
+      
+      console.log('artikelData found:', artikelData.length, 'articles');
+      
+      const videoList = document.getElementById("videoList");
+      const searchBox = document.getElementById("searchBox");
+
+      if (videoList) {
+        // Tampilkan semua video pertama kali
+        tampilkanSemuaVideo(artikelData);
+        
+        // Setup search functionality
+        if (searchBox) {
+          console.log('Setting up search...');
+          
+          searchBox.addEventListener("input", function(e) {
+            console.log('Search triggered:', e.target.value);
+            performSearch();
+          });
+          
+          // Escape key to clear
+          searchBox.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+              e.target.value = "";
+              performSearch();
+            }
+          });
+        }
+      }
+    }
+
+    function performSearch() {
+      const searchBox = document.getElementById("searchBox");
+      const keyword = searchBox.value.toLowerCase().trim();
+      
+      console.log('Performing search for:', keyword);
+      
+      let hasil;
+      if (keyword === "") {
+        hasil = artikelData;
+      } else {
+        hasil = artikelData.filter(artikel => {
+          const judulMatch = artikel.judul.toLowerCase().includes(keyword);
+          const kategoriMatch = artikel.kategori.toLowerCase().includes(keyword);
+          return judulMatch || kategoriMatch;
+        });
+      }
+      
+      console.log('Search results:', hasil.length);
+      tampilkanSemuaVideo(hasil);
+      updateSearchResults(hasil.length, keyword);
+    }
+
+    // Fungsi untuk update hasil pencarian
+    function updateSearchResults(count, keyword) {
+      let searchInfo = document.getElementById("searchInfo");
+      
+      // Buat element search info jika belum ada
+      if (!searchInfo) {
+        searchInfo = document.createElement("div");
+        searchInfo.id = "searchInfo";
+        searchInfo.className = "search-info";
+        
+        // Tempatkan setelah filter section
+        const filterSection = document.querySelector(".filter-section");
+        if (filterSection) {
+          filterSection.parentNode.insertBefore(searchInfo, filterSection.nextSibling);
+        } else {
+          // Jika tidak ada filter section, tempatkan sebelum video list
+          const videoList = document.getElementById("videoList");
+          if (videoList) {
+            videoList.parentNode.insertBefore(searchInfo, videoList);
+          }
+        }
+      }
+      
+      if (!keyword || keyword === "") {
+        searchInfo.style.display = "none";
+        searchInfo.innerHTML = "";
+      } else {
+        searchInfo.style.display = "block";
+        if (count === 0) {
+          searchInfo.innerHTML = `
+            <div class="search-result no-results">
+              <span class="search-icon">❌</span>
+              <span class="search-text">Tidak ditemukan video untuk "<strong>${keyword}</strong>"</span>
+              <button class="clear-search" onclick="clearSearch()">✕ Hapus Pencarian</button>
+            </div>
+          `;
+        } else {
+          searchInfo.innerHTML = `
+            <div class="search-result">
+              <span class="search-icon">✅</span>
+              <span class="search-text">Ditemukan <strong>${count}</strong> video untuk "<strong>${keyword}</strong>"</span>
+              <button class="clear-search" onclick="clearSearch()">✕ Hapus Pencarian</button>
+            </div>
+          `;
+        }
+      }
+    }
+    
+    // Fungsi untuk clear pencarian (global function)
+    window.clearSearch = function() {
+      console.log('Clearing search...');
+      const searchBox = document.getElementById("searchBox");
+      if (searchBox) {
+        searchBox.value = "";
+        performSearch();
+        searchBox.focus();
+      }
+    }
+    function tampilkanSemuaVideo(data) {
+      const videoList = document.getElementById("videoList");
+      videoList.innerHTML = "";
+      
+      data.forEach(artikel => {
+        if (artikel.videoYoutube) {
+          // Gunakan fungsi createVideoCard yang sudah ada di video.js
+          const videoCard = document.createElement("div");
+          videoCard.innerHTML = createVideoCard(artikel);
+          videoList.appendChild(videoCard.firstElementChild);
+        } else {
+          // Tampilkan card untuk artikel tanpa video
+          const videoCard = document.createElement("div");
+          videoCard.className = "video-card no-video";
+          videoCard.setAttribute('data-category', artikel.kategori);
+          
+          videoCard.innerHTML = `
+            <div class="video-thumbnail">
+              <div class="no-video-thumbnail">
+                <div class="no-video-icon">📖</div>
+                <div class="no-video-text">Hanya Artikel</div>
+              </div>
+            </div>
+            <div class="video-info">
+              <h3>${artikel.judul}</h3>
+              <p class="video-category">📚 ${artikel.kategori}</p>
+              <p class="video-description">Artikel tersedia untuk pembelajaran mandiri.</p>
+              <div class="video-actions">
+                <a href="artikel.html?id=${artikel.id}" 
+                   class="btn-article btn-full">📖 Baca Artikel</a>
+              </div>
+            </div>
+          `;
+          
+          videoList.appendChild(videoCard);
+        }
+      });
+      
+      // Tampilkan pesan jika tidak ada video
+      if (data.length === 0) {
+        videoList.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <h3>Tidak ada video ditemukan</h3>
+            <p>Coba gunakan kata kunci yang berbeda atau pilih kategori lain.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Fungsi filter video berdasarkan kategori (global function)
+    window.filterVideos = function(category) {
+      console.log('Filtering by category:', category);
+      
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Simpan kategori yang dipilih untuk pencarian
+      window.selectedCategory = category;
+      
+      // Lakukan pencarian dengan kategori yang dipilih
+      performSearch();
+    }
+
+    // Modifikasi performSearch untuk memperhitungkan filter kategori
+    function performSearch() {
+      const searchBox = document.getElementById("searchBox");
+      const keyword = searchBox ? searchBox.value.toLowerCase().trim() : "";
+      const category = window.selectedCategory || 'all';
+      
+      console.log('Performing search for:', keyword, 'in category:', category);
+      
+      let hasil = artikelData;
+      
+      // Filter berdasarkan kategori terlebih dahulu
+      if (category !== 'all') {
+        hasil = artikelData.filter(artikel => artikel.kategori === category);
+      }
+      
+      // Kemudian filter berdasarkan keyword jika ada
+      if (keyword !== "") {
+        hasil = hasil.filter(artikel => {
+          const judulMatch = artikel.judul.toLowerCase().includes(keyword);
+          const kategoriMatch = artikel.kategori.toLowerCase().includes(keyword);
+          return judulMatch || kategoriMatch;
+        });
+      }
+      
+      console.log('Search results:', hasil.length);
+      tampilkanSemuaVideo(hasil);
+      updateSearchResults(hasil.length, keyword);
+    }
+  </script>
+</body>
+</html>

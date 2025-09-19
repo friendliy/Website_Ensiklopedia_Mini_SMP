@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Ensiklopedia Mini SMP</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>📘 Dashboard Ensiklopedia Mini SMP</h1>
+      <div class="user-info">
+        <span>Selamat datang, <span id="userName">User</span>!</span>
+        <button onclick="logout()" class="btn-logout">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="welcome-section">
+      <h2>Pilih Mode Pembelajaran</h2>
+      <p>Silakan pilih cara belajar yang Anda inginkan:</p>
+    </div>
+
+    <div class="dashboard-options">
+      <!-- Option 1: Artikel -->
+      <div class="option-card">
+        <div class="option-icon">📖</div>
+        <h3>Mode Artikel</h3>
+        <p>Baca materi pembelajaran dalam bentuk artikel lengkap dengan penjelasan detail dan ilustrasi.</p>
+        <div class="option-features">
+          <ul>
+            <li>✅ Materi lengkap dan terstruktur</li>
+            <li>✅ Mudah dipahami step by step</li>
+            <li>✅ Dilengkapi dengan emoji dan ilustrasi</li>
+            <li>✅ Link ke materi tambahan Google</li>
+          </ul>
+        </div>
+        <a href="index.html" class="btn-option">Mulai Belajar dengan Artikel</a>
+      </div>
+
+      <!-- Option 2: Video -->
+      <div class="option-card">
+        <div class="option-icon">🎥</div>
+        <h3>Mode Video</h3>
+        <p>Tonton video pembelajaran interaktif dari YouTube untuk pemahaman yang lebih mudah dan menyenangkan.</p>
+        <div class="option-features">
+          <ul>
+            <li>✅ Video edukatif berkualitas tinggi</li>
+            <li>✅ Pembelajaran visual dan audio</li>
+            <li>✅ Bisa pause dan replay sesuai kebutuhan</li>
+            <li>✅ Akses langsung ke YouTube</li>
+          </ul>
+        </div>
+        <a href="video.html" class="btn-option">Mulai Belajar dengan Video</a>
+      </div>
+
+      <!-- Option 3: Mode Campuran -->
+      <div class="option-card featured">
+        <div class="option-icon">🌟</div>
+        <h3>Mode Campuran</h3>
+        <p><strong>Rekomendasi!</strong> Kombinasi artikel dan video untuk pengalaman belajar yang optimal.</p>
+        <div class="option-features">
+          <ul>
+            <li>⭐ Artikel lengkap + Video pembelajaran</li>
+            <li>⭐ Pemahaman maksimal</li>
+            <li>⭐ Fleksibilitas belajar</li>
+            <li>⭐ Semua fitur tersedia</li>
+          </ul>
+        </div>
+        <a href="index.html" class="btn-option btn-featured">Mulai Mode Campuran</a>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-section">
+      <h3>📊 Statistik Pembelajaran</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalArticles">4</div>
+          <div class="stat-label">Total Artikel</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalVideos">4</div>
+          <div class="stat-label">Video Tersedia</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Kategori Materi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Link Materi</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Ensiklopedia SMP | Dibuat untuk pembelajaran yang lebih interaktif</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensiklopedia Mini SMP</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="video.js" defer></script>
+  <script src="auth.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>📘 Ensiklopedia Mini SMP</h1>
+      <div class="header-nav">
+        <a href="dashboard.html" class="btn-nav">⬅ Dashboard</a>
+        <a href="video.html" class="btn-nav">🎥 Mode Video</a>
+        <button onclick="logout()" class="btn-logout">Keluar</button>
+      </div>
+    </div>
+    <input type="text" id="searchBox" placeholder="Cari artikel...">
+  </header>
+
+  <main>
+    <h2>Daftar Artikel</h2>
+    <div id="artikelList"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Ensiklopedia SMP | Dibuat untuk pembelajaran</p>
+  </footer>
+</body>
+</html>
